@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "*.reg": "reg",
+        "*.py": "python",
+        "vga.h": "c"
+    }
+}

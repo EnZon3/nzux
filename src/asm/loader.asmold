@@ -1,0 +1,62 @@
+align 4
+header_start:
+    ; multiboot magic num
+    dd 0xe85250d6
+    ; architecture
+    dd 0 ; i386
+    ;length
+    dd header_end - header_start
+    ; checksum
+    dd 0x100000000 - (0xe85250d6 + 0 + (header_end - header_start))
+
+    ; end tag
+    dw 0
+    dw 0
+    dd 8
+header_end:
+
+; stack setup
+section .bss
+align 16
+stack_b:
+    resb 512 * 100
+stack_t:
+
+section .text
+bits 32
+global start:function (start.end - start)
+start:
+    mov esp, stack_t
+    
+    ; multiboot stuff
+
+    call check_mb
+
+    ; kernel entry
+    extern main
+    call main
+
+    cli
+    call halt_msg
+.halt:   hlt
+    jmp .halt
+.end:
+
+check_mb:
+    cmp eax, 0x36d76289
+    jne err_no_mb
+    ret
+
+err_no_mb:
+    mov al, 0x30
+    jmp err_handler
+
+halt_msg:
+    mov al, "H"
+    jmp err_handler
+    ret
+
+err_handler:
+    mov dword [0xb8000], 0x04f524f45
+    mov byte [0xb8004], al
+    hlt

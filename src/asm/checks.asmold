@@ -1,0 +1,18 @@
+check_mb:
+    cmp eax, 0x36d76289
+    jne err_no_mb
+    ret
+
+err_no_mb:
+    mov al, 0x30
+    jmp err_handler
+
+halt_msg:
+    mov al, "H"
+    jmp err_handler
+    ret
+
+err_handler:
+    mov dword [0xb8000], 0x04f524f45
+    mov byte [0xb8004], al
+    hlt
