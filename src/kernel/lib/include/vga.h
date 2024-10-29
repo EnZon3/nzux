@@ -27,11 +27,21 @@ struct vga_entry_color {
 
 struct vga_entry {
 	unsigned char character;
-    struct vga_entry_color color;
+	uint8_t color;
 };
 
 static inline uint16_t vga_entry(unsigned char character, uint8_t fg, uint8_t bg, uint8_t blink);
-void term_init();
-void term_putc(char c, uint8_t color);
+/**
+ * @brief Initializes the terminal with specified text color, background colors, and blink attribute.
+ *
+ * This function sets the initial state of the terminal, including the cursor position,
+ * default text color, and clears the screen by filling it with spaces.
+ *
+ * @param fg Text color
+ * @param bg Background color
+ * @param blink The blink attribute (non-zero value enables blinking).
+ */
+void term_init(uint8_t fg, uint8_t bg, uint8_t blink);
+void term_putc(char c, uint8_t text_col);
 void term_nl();
 void term_print(const char* str);

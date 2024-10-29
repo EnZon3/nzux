@@ -1,38 +1,58 @@
-#include <include/vga.h>
+#include "include/vga.h"
+#include <stdint.h>
+#include <stddef.h>
 
 //vars
 size_t vga_r;
 size_t vga_c;
-uint8_t term_col;
 uint16_t* vga_buff;
+uint8_t term_bg;
+uint8_t term_fg;
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
 static inline uint16_t vga_entry(unsigned char character, uint8_t fg, uint8_t bg, uint8_t blink) {
-    struct vga_entry ent = {
-        .character = character,
-        .color = {
-            .fg = fg,
-            .bg = bg,
-            .blink = blink
-        }
-    };
-    return *((uint16_t*)&ent);
-};
+    uint8_t color = fg | bg << 4 | blink << 7;
+    return (uint16_t) character | (uint16_t) color << 8;
+}
 
-void term_init() {
+void term_init(uint8_t fg, uint8_t bg, uint8_t blink) {
     //set vars
     vga_r = 0;
     vga_c = 0;
-    enum VGA_COLORS set_col = VGA_COL_WHITE;
-    term_col = set_col;
+    term_bg = bg;
+    term_fg = fg;
+    vga_buff = (uint16_t*) 0xB8000;
     // clear screen
-    for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
-        vga_buff[i] = vga_entry(' ', VGA_COL_BLACK, term_col, 0);
-    };
+    for (size_t y = 0; y < VGA_HEIGHT; y++) {
+        for (size_t x = 0; x < VGA_WIDTH; x++) {
+            const size_t index = y * VGA_WIDTH + x;
+            vga_buff[index] = vga_entry(' ', fg, bg, blink);
+        }
+    }
 }
 
-void putc(char c) {
-    vga_buff[vga_r * VGA_WIDTH + vga_c] = vga_entry(c, VGA_COL_BLACK, term_col, 0);
+void term_putc(char c, uint8_t text_col) {
+    vga_buff[vga_r * VGA_WIDTH + vga_c] = vga_entry(c, text_col, term_bg, 0);
+    //inc cursor
+    if (++vga_c == VGA_WIDTH) {
+        vga_c = 0;
+        if (++vga_r == VGA_HEIGHT) {
+            vga_r = 0;
+        }
+    }
+}
+
+void term_print(const char* str) {
+    for (size_t i = 0; str[i] != '\0'; i++) {
+        if (str[i] == '\n') {
+            vga_c = 0;
+            if (++vga_r == VGA_HEIGHT) {
+                vga_r = 0;
+            }
+        } else {
+            term_putc(str[i], term_fg);
+        }
+    }
 }

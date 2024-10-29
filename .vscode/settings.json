@@ -3,6 +3,9 @@
         "*.ejs": "html",
         "*.reg": "reg",
         "*.py": "python",
-        "vga.h": "c"
-    }
+        "vga.h": "c",
+        "*.c": "c",
+        "*.h": "c"
+    },
+    "C_Cpp.clang_format_fallbackStyle": "Google"
 }
