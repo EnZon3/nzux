@@ -34,25 +34,51 @@ void term_init(uint8_t fg, uint8_t bg, uint8_t blink) {
 }
 
 void term_putc(char c, uint8_t text_col) {
-    vga_buff[vga_r * VGA_WIDTH + vga_c] = vga_entry(c, text_col, term_bg, 0);
-    //inc cursor
-    if (++vga_c == VGA_WIDTH) {
-        vga_c = 0;
-        if (++vga_r == VGA_HEIGHT) {
-            vga_r = 0;
-        }
+    switch(c) {
+        case '\n':
+            vga_c = 0;
+            if (++vga_r == VGA_HEIGHT) {
+                vga_r = 0;
+            }
+        break;
+        case '\b':
+            vga_buff[vga_r * VGA_WIDTH + vga_c - 1] = vga_entry(' ', text_col, term_bg, 0);
+            if (--vga_c == VGA_WIDTH) {
+                vga_c = 0;
+                if (--vga_r == VGA_HEIGHT) {
+                    vga_r = 0;
+                }
+            }
+        break;
+        default:
+            vga_buff[vga_r * VGA_WIDTH + vga_c] = vga_entry(c, text_col, term_bg, 0);
+            //inc cursor
+            if (++vga_c == VGA_WIDTH) {
+                vga_c = 0;
+                if (++vga_r == VGA_HEIGHT) {
+                    vga_r = 0;
+                }
+            }
+        break;
     }
 }
 
 void term_print(const char* str) {
     for (size_t i = 0; str[i] != '\0'; i++) {
-        if (str[i] == '\n') {
-            vga_c = 0;
-            if (++vga_r == VGA_HEIGHT) {
-                vga_r = 0;
-            }
-        } else {
-            term_putc(str[i], term_fg);
+
+        switch(str[i]) {
+            case '\n':
+                vga_c = 0;
+                if (++vga_r == VGA_HEIGHT) {
+                    vga_r = 0;
+                }
+            break;
+            case '\b':
+                // do nothing
+            break;
+            default:
+                term_putc(str[i], term_fg);
+            break;
         }
     }
 }

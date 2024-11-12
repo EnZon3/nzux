@@ -7,5 +7,8 @@
         "*.c": "c",
         "*.h": "c"
     },
-    "C_Cpp.clang_format_fallbackStyle": "Google"
+    "C_Cpp.clang_format_fallbackStyle": "GNU",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x86",
+    "C_Cpp.default.cStandard": "c99",
+    // "C_Cpp.errorSquiggles": "disabled"
 }
