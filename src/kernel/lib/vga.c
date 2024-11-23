@@ -1,4 +1,5 @@
 #include "include/vga.h"
+#include "util.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -17,6 +18,12 @@ static inline uint16_t vga_entry(unsigned char character, uint8_t fg, uint8_t bg
     return (uint16_t) character | (uint16_t) color << 8;
 }
 
+static void disable_cursor()
+{
+	outb(0x3D4, 0x0A);
+	outb(0x3D5, 0x20);
+}
+
 void term_init(uint8_t fg, uint8_t bg, uint8_t blink) {
     //set vars
     vga_r = 0;
@@ -24,6 +31,10 @@ void term_init(uint8_t fg, uint8_t bg, uint8_t blink) {
     term_bg = bg;
     term_fg = fg;
     vga_buff = (uint16_t*) 0xB8000;
+
+    //disable bios cursor
+    disable_cursor();
+    
     // clear screen
     for (size_t y = 0; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
