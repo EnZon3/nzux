@@ -15,10 +15,3 @@ void outb(uint16_t port, uint8_t val) {
 inline void io_wait() {
     outb(0x80, 0);
 }
-
-void* memset(void* bufptr, int value, size_t size) {
-	unsigned char* buf = (unsigned char*) bufptr;
-	for (size_t i = 0; i < size; i++)
-		buf[i] = (unsigned char) value;
-	return bufptr;
-}

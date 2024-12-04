@@ -48,5 +48,6 @@ void term_init(uint8_t fg, uint8_t bg, uint8_t blink);
 void term_putc(char c, uint8_t text_col);
 void term_nl();
 void term_print(const char* str);
+void term_rm();
 
 #endif

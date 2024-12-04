@@ -8,7 +8,7 @@ Not practical at all
 
 ## Building
 - Build docker image
-- Run docker image
+- Run docker image with `docker run --rm -it -v "$(pwd)":/root/env nzux-buildenv`
 - in container run `make all`
 - In another terminal run `qemu-system-i386 -cdrom dist/i686/nzux.iso -s`
 

@@ -44,6 +44,16 @@ void term_init(uint8_t fg, uint8_t bg, uint8_t blink) {
     }
 }
 
+void term_rm() {
+    vga_buff[vga_r * VGA_WIDTH + vga_c - 1] = vga_entry(' ', term_fg, term_bg, 0);
+    if (--vga_c == VGA_WIDTH) {
+        vga_c = 0;
+        if (--vga_r == VGA_HEIGHT) {
+            vga_r = 0;
+        }
+    }
+}
+
 void term_putc(char c, uint8_t text_col) {
     switch(c) {
         case '\n':

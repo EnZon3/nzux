@@ -1,0 +1,1 @@
+void startTerm(char* stdin, char* argv);
