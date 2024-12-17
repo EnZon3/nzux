@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define CEIL_DIV(a,b) (((a + b) - 1)/b)
+
 //Headers here
 
 void outb(uint16_t port, uint8_t val);

@@ -1,8 +1,8 @@
 .PHONY: all clean dist build check testdrivers todolist build-x86 build-x86-kernel-bin echo
 
-INCLUDEDIRS := -I src/kernel/lib/include -I src/kernel/lib/extra -I src/kernel/lib/include/util -I src/kernel/libk -I src/kernel/libk/include
+INCLUDEDIRS := -I src/kernel/lib/include -I src/kernel/lib/extra -I src/kernel/lib/include/util -I src/kernel/lib/include/mem/  -I src/kernel/libk -I src/kernel/libk/include
 
-CFLAGS := $(INCLUDEDIRS) -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+CFLAGS := $(INCLUDEDIRS) -std=gnu99 -ffreestanding -O2 -Wall -Wextra -g
 
 # asm src
 ASM_SRC := $(shell find src/asm -type f -name '*.asm')

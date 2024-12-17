@@ -23,6 +23,7 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/src/kernel",
                 "${workspaceFolder}/src/kernel/lib/include/**",
+                "${workspaceFolder}/src/kernel/lib/include/mem/**",
                 "${workspaceFolder}/src/kernel/libk/include/**"
             ],
             "defines": [

@@ -3,9 +3,11 @@
         "*.ejs": "html",
         "*.reg": "reg",
         "*.py": "python",
+        "*.css": "css",
         "vga.h": "c",
         "*.c": "c",
-        "*.h": "c"
+        "*.h": "c",
+        "*.tcc": "c"
     },
     "C_Cpp.clang_format_fallbackStyle": "GNU",
     "C_Cpp.default.intelliSenseMode": "linux-gcc-x86",

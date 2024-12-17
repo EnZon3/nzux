@@ -24,13 +24,27 @@ static void disable_cursor()
 	outb(0x3D5, 0x20);
 }
 
+void scroll_line() {
+    // Move each line up
+    for (int y = 0; y < VGA_HEIGHT - 1; y++) {
+        for (int x = 0; x < VGA_WIDTH; x++) {
+            vga_buff[y * VGA_WIDTH + x] = vga_buff[(y + 1) * VGA_WIDTH + x];
+        }
+    }
+
+    // Clear the last line
+    for (int x = 0; x < VGA_WIDTH; x++) {
+        vga_buff[(VGA_HEIGHT - 1) * VGA_WIDTH + x] = (uint16_t) ' ' | (0x07 << 8); // ' ' with attribute byte for white on black
+    }
+}
+
 void term_init(uint8_t fg, uint8_t bg, uint8_t blink) {
     //set vars
     vga_r = 0;
     vga_c = 0;
     term_bg = bg;
     term_fg = fg;
-    vga_buff = (uint16_t*) 0xB8000;
+    vga_buff = (uint16_t*) 0xC00B8000;
 
     //disable bios cursor
     disable_cursor();
@@ -59,7 +73,8 @@ void term_putc(char c, uint8_t text_col) {
         case '\n':
             vga_c = 0;
             if (++vga_r == VGA_HEIGHT) {
-                vga_r = 0;
+                vga_r = VGA_HEIGHT - 1;
+                scroll_line();
             }
         break;
         case '\b':
@@ -67,7 +82,8 @@ void term_putc(char c, uint8_t text_col) {
             if (--vga_c == VGA_WIDTH) {
                 vga_c = 0;
                 if (--vga_r == VGA_HEIGHT) {
-                    vga_r = 0;
+                    vga_r = VGA_HEIGHT - 1;
+                    scroll_line();
                 }
             }
         break;
@@ -77,7 +93,8 @@ void term_putc(char c, uint8_t text_col) {
             if (++vga_c == VGA_WIDTH) {
                 vga_c = 0;
                 if (++vga_r == VGA_HEIGHT) {
-                    vga_r = 0;
+                    vga_r = VGA_HEIGHT - 1;
+                    scroll_line();
                 }
             }
         break;

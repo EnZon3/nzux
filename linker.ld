@@ -2,27 +2,47 @@ OUTPUT_FORMAT(elf32-i386)
 ENTRY(_start)
 SECTIONS
 {
-    . = 2M;
-    .text BLOCK(4K) : ALIGN(4K)
+    . = 1M;
+
+	.multiboot ALIGN(4k) :
 	{
 		*(.multiboot)
+	}
+
+	.note.gnu.build-id ALIGN(4k) :
+	{
+		*(.note.gnu.build-id)
+	}
+
+	.boot ALIGN(4k) :
+	{
+		*(.boot)
+	}
+
+	/* higher half */
+
+	. += 0xC0000000;
+
+	.text ALIGN(4k) : AT(ADDR(.text) - 0xC0000000)
+	{
 		*(.text)
 	}
-    /* Read-only data. */
-	.rodata BLOCK(4K) : ALIGN(4K)
+
+	.rodata ALIGN(4k) : AT(ADDR(.rodata) - 0xC0000000)
 	{
 		*(.rodata)
 	}
-    
-    .data BLOCK(4K) : ALIGN(4K)
+
+	.data ALIGN(4k) : AT(ADDR(.data) - 0xC0000000)
 	{
 		*(.data)
 	}
 
-	/* Read-write data (uninitialized) and stack */
-	.bss BLOCK(4K) : ALIGN(4K)
+	.bss ALIGN(4k) : AT(ADDR(.bss) - 0xC0000000)
 	{
 		*(COMMON)
 		*(.bss)
 	}
+
+	_kernel_end = .;
 }

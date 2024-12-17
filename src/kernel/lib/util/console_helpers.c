@@ -81,8 +81,16 @@ char* itoa(int value, char* str, int base) {
 
     rc = ptr = str;
 
+    // Handle zero explicitly, otherwise empty string is printed for zero.
+    if (value == 0) {
+        *ptr++ = '0';
+        *ptr = '\0';
+        return str;
+    }
+
     // Set '-' for negative decimals.
-    if (value < 0 && base == 10) {
+    bool isNegative = (value < 0 && base == 10);
+    if (isNegative) {
         *ptr++ = '-';
     }
 
@@ -90,11 +98,11 @@ char* itoa(int value, char* str, int base) {
     low = ptr;
 
     // The actual conversion.
-    do {
+    while (value) {
         // Modulo is negative for negative value. This trick makes abs() unnecessary.
         *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[abs(value % base)];
         value /= base;
-    } while (value);
+    }
 
     // Terminating the string.
     *ptr = '\0';

@@ -65,7 +65,7 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
 bool shift = false;
 volatile bool input_ready = false;
 
-char text[2000] = { 0 };
+char text[10000] = { 0 };
 
 // functions stolen from https://github.com/ethanprogramser/eth-os/blob/main/src/keyboard.c
 void append(char c) {
